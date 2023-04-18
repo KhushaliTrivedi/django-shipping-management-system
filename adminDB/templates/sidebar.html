@@ -1,0 +1,41 @@
+<!-- Sidebar  -->
+        <nav id="sidebar">
+            <div class="sidebar-header">
+                <h3><span>Admin Dashboard</span></h3>
+            </div>
+            <ul class="list-unstyled components">
+                <li class="{% if request.path == '/admin/' %}active{% endif %}">
+                    <a href="/admin" class="dashboard"><i class="material-icons">dashboard</i><span>Dashboard</span></a>
+                </li>
+
+                <hr>
+
+                <li class="{% if request.path == '/admin/package' %}active{% endif %}">
+                    <a href="/admin/package">
+                        <i class="material-icons">all_inbox</i><span>Packages</span></a>
+                </li>
+
+                <li class="{% if request.path == '/admin/route' %}active{% endif %}">
+                    <a href="/admin/route">
+                        <i class="material-icons">route</i><span>Routes</span></a>
+                </li>
+
+                <li class="{% if request.path == '/admin/vehicle' %}active{% endif %}">
+                    <a href="/admin/vehicle">
+                        <i class="material-icons">directions_car</i><span>Vehicles</span></a>
+                </li>
+                
+                <hr>
+                
+                <li class="{% if request.path == '/admin/profile/' %}active{% endif %}">
+                    <a href="/admin/profile">
+                        <i class="material-icons">person</i><span>Profile</span></a>
+                </li>
+
+                <li>
+                    <a href="/logout">
+                        <i class="material-icons" style="color: #d1626d;">logout</i><span style="color: #d1626d;">Logout</span></a>
+                </li>
+
+            </ul>
+        </nav>

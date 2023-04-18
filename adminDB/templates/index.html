@@ -1,0 +1,113 @@
+{% include 'header.html' %}
+
+<body>
+
+    <div class="wrapper">
+        <div class="body-overlay"></div>
+        {% include 'sidebar.html' %}
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            {% include 'navbar.html' %}
+
+            <section id="table">
+                <div class="main-content">
+
+                    <div class="row">
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                                <div class="card-header">
+                                    <div class="icon icon-warning">
+                                        <span class="material-icons">
+                                            follow_the_signs
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <p class="category"><strong>Accounts</strong></p>
+                                    <h3 class="card-title">{{userC}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                                <div class="card-header">
+                                    <div class="icon icon-rose">
+                                        <span class="material-symbols-outlined">
+                                            deployed_code
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <p class="category"><strong>Packages</strong></p>
+                                    <h3 class="card-title">{{packageC}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                                <div class="card-header">
+                                    <div class="icon icon-primary">
+                                        <span class="material-symbols-outlined">
+                                            map
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <p class="category"><strong>Routes</strong></p>
+                                    <h3 class="card-title">{{routeC}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-6">
+                            <div class="card card-stats">
+                                <div class="card-header">
+                                    <div class="icon icon-info">
+                                        <span class="material-symbols-outlined">
+                                            emoji_transportation
+                                        </span>
+                                    </div>
+                                </div>
+                                <div class="card-content">
+                                    <p class="category"><strong>Vehicles</strong></p>
+                                    <h3 class="card-title">{{vehicleC}}</h3>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row ">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Activities</h4>
+                                </div>
+                                <div class="card-content">
+                                    <div class="streamline">
+                                        {%for row in last_rows%}
+                                            {% if row.name %}
+                                            <div class="sl-item sl-warning">
+                                                <div class="sl-content">
+                                                    <small class="text-muted">{{row.date_time}}</small>
+                                                    <p><b>{{row.name}}</b> is registered as {% if row.is_admin == True %}Admin{%else%}Team Member{%endif%}</p>
+                                                </div>
+                                            </div>
+                                            {% else %}
+                                            <div class="sl-item sl-primary">
+                                                <div class="sl-content">
+                                                    <small class="text-muted">{{row.date_time}}</small>
+                                                    <p><b>"{{row.title}}"</b> package is assigned to the team</p>
+                                                </div>
+                                            </div>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+            </section>
+
+            {% include 'footer.html' %}

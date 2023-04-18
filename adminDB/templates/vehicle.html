@@ -1,0 +1,203 @@
+{% include 'header.html' %}
+
+<body>
+
+    <div class="wrapper">
+        <div class="body-overlay"></div>
+        {% include 'sidebar.html' %}
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            {% include 'navbar.html' %}
+            <section id="table">
+                <div class="main-content">
+
+                    {% if id == None %}
+                    <!-- Vehicle -->
+                    <div class="row">
+                        <div class="col-12">
+                            {% for msg in messages %}
+                            {% if msg.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                                {{msg}}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-danger" role="alert">
+                                {{msg}}
+                            </div>
+                            {% endif %}
+                            {% endfor%}
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Add Vehicle</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <form action="{% url 'addVehicle' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="vNumber" class="form-label">Vehicle Number</label>
+                                            <input type="text" name="vNumber" class="form-control" id="vNumber"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model" class="form-label">Model</label>
+                                            <input type="text" name="vModel" class="form-control" id="model" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="availability" class="form-label">Availability</label>
+                                            <select class="form-control form-select" name="availability"
+                                                id="availability" aria-label="Default select example">
+                                                <option value="0" selected>Available</option>
+                                                <option value="1" >In Use</option>
+                                                <option value="2">Repair</option>
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Save</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">All Vehicles</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="text-primary">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Vehicle Number</th>
+                                                <th>Model</th>
+                                                <th>Availability</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for n in data %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{n.vehicle_number}}</td>
+                                                <td>{{n.model}}</td>
+                                                <td>
+                                                    {% if n.is_available == 0 %}
+                                                    <h5>
+                                                        <span class="badge badge-success text-light">Available</span>
+                                                    </h5>
+                                                    {% elif n.is_available == 1 %}
+                                                    <h5>
+                                                        <span class="badge badge-warning text-light">In Use</span>
+                                                    </h5>
+                                                    {% else%}
+                                                    <h5>
+                                                        <span class="badge badge-danger text-light">Repair</span>
+                                                    </h5>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    <a href="editVehicle/{{ n.id }}">
+                                                        <span style="color: #0dcaf0;"
+                                                            class="material-symbols-outlined mr-3">edit</span>
+                                                    </a>
+                                                    <a href="#deleteVehicle{{n.id}}" data-toggle="modal"
+                                                        data-target="#deleteVehicle{{n.id}}">
+                                                        <span style="color: #dc3545;"
+                                                            class="material-symbols-outlined mr-3">delete</span>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    {% for n in data %}
+                    <div class="modal fade" id="deleteVehicle{{n.id}}" tabindex="-1" aria-labelledby="deleteVehicleLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <b>
+                                        <h1 class="modal-title fs-6" style="font-size: larger;" id="deleteVehicleLabel">
+                                            Delete Vehicle</h1>
+                                    </b>
+                                </div>
+                                <div class="modal-body" style="color: black;">
+                                    Do you want to delete this Vehicle?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <a href="deleteVehicle/{{ n.id }}"><button type="button"
+                                            class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- ./Vehicle -->
+
+                    {% else %}
+
+                    <!-- Edit Vehicle -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Edit Vehicle</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <form action="{% url 'updateVehicle' id %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="vNumber" class="form-label">Vehicle Number</label>
+                                            <input type="text" name="vNumber" value="{{data.vehicle_number}}" class="form-control" id="vNumber"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="model" class="form-label">Model</label>
+                                            <input type="text" name="vModel" value="{{data.model}}" class="form-control" id="model" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="availability" class="form-label">Availability</label>
+                                            <select class="form-control form-select" name="availability" id="availability">
+                                                {% if data.is_available == 0 %}
+                                                <option value="0" selected>Available</option>
+                                                <option value="1">In Use</option>
+                                                <option value="2">Repair</option>
+                                                {% elif data.is_available == 1 %}
+                                                <option value="0">Available</option>
+                                                <option value="1" selected>In Use</option>
+                                                <option value="2">Repair</option>
+                                                {% else %}
+                                                <option value="0">Available</option>
+                                                <option value="1">In Use</option>
+                                                <option value="2" selected>Repair</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <a href="/admin/vehicle"><button type="button"
+                                            class="btn btn-outline-danger">Discard</button></a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./Edit Vehicle -->
+                    {% endif %}
+
+                </div>
+            </section>
+
+            {% include 'footer.html' %}

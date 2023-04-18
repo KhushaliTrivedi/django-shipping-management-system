@@ -1,0 +1,53 @@
+{% include 'T-header.html' %}
+                
+                <div class="row">
+                    <!-- Column -->
+                    <div class="col-12">
+                        {% for msg in messages %}
+                            {% if msg.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                                {{msg}}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-danger" role="alert">
+                                {{msg}}
+                            </div>
+                            {% endif %}
+                            {% endfor%}
+                        <div class="card">
+                            <!-- Tab panes -->
+                            <div class="card-body">
+                                <form action="{% url 'updateProfile' user.id %}" class="form-horizontal form-material mx-2" method="post">
+                                    {% csrf_token %}
+                                    <div class="form-group">
+                                        <label class="col-md-12">Full Name</label>
+                                        <div class="col-md-12">
+                                            <input type="text" name="name" value="{{user.name}}" class="form-control form-control-line" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="example-email" class="col-md-12">Email</label>
+                                        <div class="col-md-12">
+                                            <input type="email" name="email" value="{{user.email}}" class="form-control form-control-line" name="example-email" id="example-email" required>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-md-12">Password</label>
+                                        <div class="col-md-12">
+                                            <input type="password" name="password" placeholder="**********" class="form-control form-control-line">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-sm-12">
+                                            <button type="submit" class="btn btn-success">Update Profile</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Column -->
+                </div>
+                
+            </div>
+{% include 'T-footer.html' %}

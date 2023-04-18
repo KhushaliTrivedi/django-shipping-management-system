@@ -1,0 +1,77 @@
+{% include 'T-header.html' %}
+
+                <div class="row">
+                    <!-- column -->
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    {% if data.is_delivered == 0 %}
+                                    {{data.title}} | <span class="badge text-bg-danger">Not Delivered</span>
+                                    {% elif data.is_delivered == 1 %}
+                                    {{data.title}} | <span class="badge text-bg-success">Delivered</span>
+                                    {% else %}
+                                    {{data.title}} | <span class="badge text-bg-warning">Processing</span>
+                                    {% endif %}
+                                </h4>
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped-columns">
+                                        <tbody style="font-size: 16px;">
+                                            <tr>
+                                                <td><b>Title</b></td>
+                                                <td>{{data.title}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Delivery Due Date</b></td>
+                                                <td>{{data.delivery_due}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Sender</b></td>
+                                                <td>{{data.sender}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Receiver</b></td>
+                                                <td>{{data.receiver}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 250px;"><b>Description</b></td>
+                                                <td>{{data.description}}</td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Route</b></td>
+                                                <td>
+                                                    {% for r in route %}
+                                                        {% if r.id == data.route_id %}
+                                                            {{r.start}} - {{r.end}}
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Vehicle</b></td>
+                                                <td>
+                                                    {% for v in vehicle %}
+                                                        {% if v.id == data.vehicle_id %}
+                                                            {{v.vehicle_number}} || <b>[ {{v.model}} ]</b>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td><b>Team</b></td>
+                                                <td>
+                                                {% for tVal in data.team_list %} 
+                                                    <span style="display: block;">{{ tVal.name }}</span>
+                                                {% endfor %}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+            </div>
+{% include 'T-footer.html' %}

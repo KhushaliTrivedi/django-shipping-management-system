@@ -1,0 +1,119 @@
+{% include 'T-header.html' %}
+
+        <div class="row">
+            <!-- column -->
+            <div class="col-12">
+                {% for msg in messages %}
+                {% if msg.tags == 'success' %}
+                <div class="alert alert-success" role="alert">
+                    {{msg}}
+                </div>
+                {% else %}
+                <div class="alert alert-danger" role="alert">
+                    {{msg}}
+                </div>
+                {% endif %}
+                {% endfor%}
+                <div class="card">
+                    <div class="card-body">
+                        <h4 class="card-title" style="color: #20aee3;">Total Packages</h4>
+                        <div class="table-responsive">
+                            <table class="table table-hover table-bordered">
+                                <thead>
+                                    <tr style="font-size: medium; font-family: system-ui;">
+                                        <th>Package Title</th>
+                                        <th>Delivery Due Date</th>
+                                        <th>Days Left</th>
+                                        <th>Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody style="font-size: 16px; font-family: Arial, Helvetica, sans-serif;">
+                                    {% for d in data %}
+                                    {% for due in d.due_days %}
+                                    <tr>
+                                        <td>{{d.title}}</td>
+                                        <td>{{d.delivery_due}}</td>
+                                        <td>
+                                            {% if d.is_delivered == 1 %}
+                                            Delivered
+                                            {% else %}
+                                            {{due}} Days
+                                            {%endif%}
+                                        </td>
+                                        <td>
+                                            {% if d.is_delivered == 0 %}
+                                            <span class="badge text-bg-danger">Not Delivered</span>
+                                            {% elif d.is_delivered == 1 %}
+                                            <span class="badge text-bg-success">Delivered</span>
+                                            {% else %}
+                                            <span class="badge text-bg-warning">Processing</span>
+                                            {% endif %}
+                                        </td>
+                                        <td>
+                                            <a href="package-details/{{d.id}}" class="btn btn-sm btn-primary">
+                                                View
+                                            </a>
+                                            <a href="#editPackage{{d.id}}" class="btn btn-sm btn-info"
+                                                data-bs-toggle="modal" data-bs-target="#editPackage{{d.id}}">
+                                                Edit
+                                            </a>
+                                        </td>
+                                    </tr>
+                                    {% endfor %}
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Edit Modal -->
+                {% for n in data %}
+                <div class="modal fade" id="editPackage{{n.id}}" tabindex="-1" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h1 class="modal-title fs-5" id="exampleModalLabel">Change Status</h1>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form action="{% url 'updateStatus' n.id %}" method="post">
+                                    {% csrf_token %}
+                                    <div class="mb-3">
+                                        <input type="hidden" name="vehicleId" value="{{n.vehicle_id}}">
+                                        <label for="status" class="form-label"><b>Status</b></label>
+                                        <select class="form-control form-select" id="status" name="status" required>
+                                            {% if n.is_delivered == 0 %}
+                                            <option value="1">Delivered</option>
+                                            <option value="2">Processing</option>
+                                            <option value="0" selected>Not Delivered</option>
+                                            {% elif n.is_delivered == 1 %}
+                                            <option value="1" selected>Delivered</option>
+                                            <option value="2">Processing</option>
+                                            <option value="0">Not Delivered</option>
+                                            {% else %}
+                                            <option value="1">Delivered</option>
+                                            <option value="2" selected>Processing</option>
+                                            <option value="0">Not Delivered</option>
+                                            {% endif %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="submit" class="btn btn-primary">Update</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- ./Edit Modal -->
+
+            </div>
+        </div>
+    </div>
+    {% include 'T-footer.html' %}

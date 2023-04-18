@@ -1,0 +1,209 @@
+{% include 'header.html' %}
+
+<body>
+
+    <div class="wrapper">
+        <div class="body-overlay"></div>
+        {% include 'sidebar.html' %}
+
+        <!-- Page Content  -->
+        <div id="content">
+
+            {% include 'navbar.html' %}
+            <section id="table">
+                <div class="main-content">
+                    {% if id == None %}
+
+                    <!-- Profile -->
+                    <div class="row">
+                        <div class="col-12">
+                            {% for msg in messages %}
+                            {% if msg.tags == 'success' %}
+                            <div class="alert alert-success" role="alert">
+                                {{msg}}
+                            </div>
+                            {% else %}
+                            <div class="alert alert-danger" role="alert">
+                                {{msg}}
+                            </div>
+                            {% endif %}
+                            {% endfor%}
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Add Account</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <form action="{% url 'addProfile' %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" name="name" class="form-control" id="name"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label">Role</label>
+                                            <select class="form-control form-select" name="role" id="role"
+                                                aria-label="Default select example">
+                                                <option value="team" selected>Team Member</option>
+                                                <option value="admin">Admin</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Username</label>
+                                            <input type="email" name="username" class="form-control"
+                                                placeholder="test@gmail.com" id="email" aria-describedby="emailHelp"
+                                                required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" name="password" class="form-control" id="password"
+                                                required>
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Table -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Total Accounts</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <table class="table table-hover">
+                                        <thead class="text-primary">
+                                            <tr>
+                                                <th>#</th>
+                                                <th>Name</th>
+                                                <th>Username</th>
+                                                <th>Password</th>
+                                                <th>Role</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for n in data %}
+                                            <tr>
+                                                <td>{{ forloop.counter }}</td>
+                                                <td>{{n.name}}</td>
+                                                <td>{{n.email}}</td>
+                                                <td>********</td>
+                                                <td>
+                                                    {% if n.is_admin == True %}
+                                                    <h5>
+                                                        <span class="badge badge-success text-light">Admin</span>
+                                                    </h5>
+                                                    {% else %}
+                                                    <h5>
+                                                        <span class="badge badge-secondary text-light">Team
+                                                            Member</span>
+                                                    </h5>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if request.user.is_admin == True %}
+                                                    <a href="updateProfile/{{ n.id }}">
+                                                        <span style="color: #0dcaf0;"
+                                                            class="material-symbols-outlined mr-3">edit</span>
+                                                    </a>
+                                                    <a href="#deleteAccount{{n.id}}" data-toggle="modal"
+                                                        data-target="#deleteAccount{{n.id}}">
+                                                        <span style="color: #dc3545;"
+                                                            class="material-symbols-outlined mr-3">delete</span>
+                                                    </a>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal -->
+                    {% for n in data %}
+                    <div class="modal fade" id="deleteAccount{{n.id}}" tabindex="-1" aria-labelledby="deleteAccLabel"
+                        aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <b>
+                                        <h1 class="modal-title fs-6" style="font-size: larger;" id="deleteAccLabel">
+                                            Delete Account</h1>
+                                    </b>
+                                </div>
+                                <div class="modal-body" style="color: black;">
+                                    Do you want to delete this User?
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary"
+                                        data-dismiss="modal">Close</button>
+                                    <a href="deleteProfile/{{ n.id }}"><button type="button"
+                                            class="btn btn-danger">Delete</button></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                    <!-- ./Profile -->
+                    {% else %}
+
+                    <!-- Edit Profile -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header card-header-text">
+                                    <h4 class="card-title">Update Account</h4>
+                                </div>
+                                <div class="card-content table-responsive">
+                                    <form action="{% url 'updateRecord' id %}" method="POST">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label for="name" class="form-label">Name</label>
+                                            <input type="text" name="name" value="{{data.name}}" class="form-control"
+                                                id="name" aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="role" class="form-label">Role</label>
+                                            <select class="form-control form-select" name="role" id="role"
+                                                aria-label="Default select example">
+                                                {% if data.is_admin == True %}
+                                                <option value="team">Team Member</option>
+                                                <option value="admin" selected>Admin</option>
+                                                {% else %}
+                                                <option value="team" selected>Team Member</option>
+                                                <option value="admin">Admin</option>
+                                                {% endif %}
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="email" class="form-label">Username</label>
+                                            <input type="email" name="username" value="{{data.email}}"
+                                                class="form-control" placeholder="test@gmail.com" id="email"
+                                                aria-describedby="emailHelp" required>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="password" class="form-label">Password</label>
+                                            <input type="password" name="password" class="form-control" id="password">
+                                        </div>
+                                        <button type="submit" class="btn btn-primary">Update</button>
+                                        <a href="/admin/profile"><button type="button"
+                                                class="btn btn-outline-danger">Discard</button></a>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ./Edit Profile -->
+                    {% endif %}
+                </div>
+            </section>
+
+            {% include 'footer.html' %}
